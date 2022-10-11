@@ -1,43 +1,62 @@
 
 require './files_bot/logger.rb'
+require './files_bot/config.rb'
 
 class Bot
 	include Logger
+	include Config
 
-	attr_accessor :estado
+	attr_accessor :estado, :parametros
 
 	def run
-		@estado = 0
+		@estado = true
 		begin
-		system('clear')
-		verificar_log()
-		puts("")
-		puts(" " + "=" * 128)
-		mensaje = "Iniciando Repro's Bot..."
-		puts("  " + mensaje)
-		escribir_log(mensaje)
-		mensaje = " #{'~' * 128}"
-		escribir_log(mensaje, false)
-		puts(" " + "~" * 128)
-		puts("")
+			system('clear')
+			
+			if @estado 
+				@estado = verificar_log()
+			end
+			
+			puts("")
+			mensaje = " #{'=' * 128}"
+			puts(mensaje)
+			escribir_log(mensaje, false)
+			mensaje = " Iniciando Repro's Bot..."
+			puts(" " + mensaje)
+			escribir_log(mensaje)
+			mensaje = " #{'~' * 128}"
+			puts(mensaje)
+			escribir_log(mensaje, false)
+			
+			if @estado 
+				aux_conf = cargar_configuracion
+				if aux_conf.eql?(false) 
+					@estado = false
+				else
+					@parametros = aux_conf.clone
+				end
+			end
 
-
-
-		mensaje = " #{'~' * 128}"
-		escribir_log(mensaje, false)
-		puts(" " + "~" * 128)
-		mensaje = "Finalizando Repro's Bot..."
-		puts("  " + mensaje)
-		escribir_log(mensaje)
-		mensaje = " #{'=' * 128}"
-		puts(mensaje)
-		escribir_log(mensaje, false)
-		puts("")
-
-		rescue Excetion => excepcion
+		rescue Exception => excepcion
 			@estado = 1
-			puts("  #{Datetime.now.to_str} - ERROR - Ejecicion principal - #{excepcion.message}")
+			mensaje = " #{'-' * 128}"
+			puts(mensaje)
+			escribir_log(mensaje, false)
+			mensaje = "ERROR - Ejecucion principal - #{excepcion.message}"
+			puts("  " + mensaje)
+			escribir_log(mensaje)
+
 		ensure
+			mensaje = " #{'~' * 128}"
+			puts(mensaje)
+			escribir_log(mensaje, false)
+			mensaje = "Finalizando Repro's Bot..."
+			puts("  " + mensaje)
+			escribir_log(mensaje)
+			mensaje = " #{'=' * 128}"
+			puts(mensaje)
+			escribir_log(mensaje, false)
+			puts("")
 			return @estado
 		end
 
