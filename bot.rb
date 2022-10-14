@@ -2,13 +2,15 @@
 require './files_bot/logger.rb'
 require './files_bot/config.rb'
 require './files_bot/source.rb'
+require './files_bot/target.rb'
 
 class Bot
 	include Logger
 	include Config
 	include Source
+	include Target
 
-	attr_accessor :estado, :parametros
+	attr_accessor :estado, :parametros, :terminales_candidatas, :terminales_miembro
 
 	def run
 		@estado = true
@@ -47,8 +49,26 @@ class Bot
 					end
 				end
 			end
+		
+			if @estado
+				@terminales_candidatas = buscar_candidatas(@parametros)
+				unless @terminales_candidatas then
+					@estado = false
+					mensaje = "ALERTA - Ejecucion principal - No se pudo completar la recoleccion de terminales candidatas..."
+					puts("  " + mensaje)
+					escribir_log(mensaje)
+				end
+			end
 
-		buscar_candidatas(@parametros)
+			if @estado
+      	@terminales_miembro = buscar_miembros(@parametros)
+        unless @terminales_miembro then
+         	@estado = false
+         	mensaje = "ALERTA - Ejecucion principal - No se pudo completar la recoleccion de terminales miembro..."
+         	puts("  " + mensaje)
+         	escribir_log(mensaje)
+        end
+			end
 
 		rescue Exception => excepcion
 			@estado = false

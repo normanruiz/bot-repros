@@ -18,13 +18,15 @@ module Config
 				mensaje = "Configuracion cargada correctamente..."
 				puts("  " + mensaje)
 				escribir_log(mensaje)
+				mensaje = "Subproceso finalizado..."
+				puts("  " + mensaje)
+				escribir_log(mensaje)
 			else
 				mensaje = "No se pudo configurar el bot..."
 				puts("  " + mensaje)
 				escribir_log(mensaje)
 				estado = false
 			end
-
 		rescue Exception => excepcion
 			estado = false
 			mensaje = "ERROR - Cargando configuracion - #{excepcion.message}}"
