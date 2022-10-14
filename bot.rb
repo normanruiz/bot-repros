@@ -1,10 +1,12 @@
 
 require './files_bot/logger.rb'
 require './files_bot/config.rb'
+require './files_bot/source.rb'
 
 class Bot
 	include Logger
 	include Config
+	include Source
 
 	attr_accessor :estado, :parametros
 
@@ -30,15 +32,26 @@ class Bot
 			
 			if @estado 
 				aux_conf = cargar_configuracion
-				if aux_conf.eql?(false) 
+				unless aux_conf then
 					@estado = false
 				else
 					@parametros = aux_conf.clone
+					@estado = @parametros['status']
+					unless @estado then
+						mensaje = " #{'-' * 128}"
+						puts(mensaje)
+						escribir_log(mensaje, false)
+						mensaje = "ALERTA - Ejecucion principal - BOT desactivado..."
+						puts("  " + mensaje)
+						escribir_log(mensaje)
+					end
 				end
 			end
 
+		buscar_candidatas(@parametros)
+
 		rescue Exception => excepcion
-			@estado = 1
+			@estado = false
 			mensaje = " #{'-' * 128}"
 			puts(mensaje)
 			escribir_log(mensaje, false)
@@ -47,6 +60,14 @@ class Bot
 			escribir_log(mensaje)
 
 		ensure
+			unless @estado then
+				mensaje = " #{'-' * 128}"
+				puts(mensaje)
+				escribir_log(mensaje, false)
+				mensaje = "ALERTA - Ejecucion principal - Se detiene el proceso, no se ejecutaran mas acciones..."
+				puts("  " + mensaje)
+				escribir_log(mensaje)
+			end
 			mensaje = " #{'~' * 128}"
 			puts(mensaje)
 			escribir_log(mensaje, false)
