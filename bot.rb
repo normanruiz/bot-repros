@@ -2,6 +2,7 @@
 require './files_bot/logger.rb'
 require './files_bot/config.rb'
 require './files_bot/source.rb'
+require './files_bot/filter.rb'
 require './files_bot/target.rb'
 
 class Bot
@@ -9,18 +10,19 @@ class Bot
 	include Config
 	include Source
 	include Target
+	include Filter
 
-	attr_accessor :estado, :parametros, :terminales_candidatas, :terminales_miembro
+	attr_accessor :estado, :parametros, :terminales_candidatas, :terminales_miembro, :nuevo_lote
 
 	def run
 		@estado = true
 		begin
 			system('clear')
-			
-			if @estado 
+
+			if @estado
 				@estado = verificar_log()
 			end
-			
+
 			puts("")
 			mensaje = " #{'=' * 128}"
 			puts(mensaje)
@@ -31,8 +33,8 @@ class Bot
 			mensaje = " #{'~' * 128}"
 			puts(mensaje)
 			escribir_log(mensaje, false)
-			
-			if @estado 
+
+			if @estado
 				aux_conf = cargar_configuracion
 				unless aux_conf then
 					@estado = false
@@ -49,7 +51,7 @@ class Bot
 					end
 				end
 			end
-		
+
 			if @estado
 				@terminales_candidatas = buscar_candidatas(@parametros)
 				unless @terminales_candidatas then
@@ -68,6 +70,16 @@ class Bot
          	puts("  " + mensaje)
          	escribir_log(mensaje)
         end
+			end
+
+			if @estado
+				@nuevo_lote = generar_nuevo_lote(@parametros, @terminales_candidatas, @terminales_miembro)
+				unless @nuevo_lote then
+					@estado = false
+					mensaje = "ALERTA - Ejecucion principal - No se pudo completar la generacion del nuevo lote de terminales..."
+					puts("  " + mensaje)
+					escribir_log(mensaje)
+				end
 			end
 
 		rescue Exception => excepcion
