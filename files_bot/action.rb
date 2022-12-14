@@ -73,8 +73,8 @@ module Action
 			keys_aux = nuevo_lote.keys
 			aux = keys_aux.slice(contador, trabajos)
 			sublote = nuevo_lote.select { |k,v| aux.include?(k) }
-			mensaje = "#{hilo} - Sublote generado: #{sublote}"
-			escribir_log(mensaje)
+			#mensaje = "#{hilo} - Sublote generado: #{sublote}"
+			#escribir_log(mensaje)
 
 		rescue Exception => excepcion
 			estado = false
@@ -109,14 +109,14 @@ module Action
 					when 'u'
 						update = nonquery_u.sub("{terminal}", k)
 						ejecutar_actualizacion(destino_datos, update)
-		    			mensaje = "#{hilo} - Ejecutando update: #{update}"
-						escribir_log(mensaje)
+		    			#mensaje = "#{hilo} - Ejecutando update: #{update}"
+						#escribir_log(mensaje)
 					when 'i'
 						insert = nonquery_i.sub("{terminal}", k)
 						insert = insert.sub("{prioridad}", v[1].to_s)
 						ejecutar_insercion(destino_datos, insert)
-						mensaje = "#{hilo} - Ejecutando insert: #{insert}"
-						escribir_log(mensaje)
+						#mensaje = "#{hilo} - Ejecutando insert: #{insert}"
+						#escribir_log(mensaje)
 					end
 
 				end

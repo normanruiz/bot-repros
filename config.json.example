@@ -1,0 +1,49 @@
+{
+    "nombre": "BotRepros",
+    "status": true,
+    "data_conection": {
+        "data_source": {
+            "server": "127.0.0.1",
+	        "database": "mibase",
+            "username": "usuario",
+            "password": "contraseña",
+            "query": "SELECT vlb.[Terminal], vlb.[CodigoRepro] FROM [automatizacion].[sis].[uvst_laposTecno_botrepros] AS vlb ORDER BY 1 ASC"
+            },
+        "data_destiny": {
+        "server": "127.0.0.1",
+        "database": "mibase",
+        "username": "usuario",
+        "password": "contraseña",
+            "query": "SELECT sa.[terminal], sa.[cant_solicitudes], sa.[estado] FROM [automatizacion].[sis].[solicitudAutoini] AS sa (NOLOCK) WHERE sa.[informante] = 'repros';",
+            "nonquery_i": "INSERT INTO [automatizacion].[sis].[solicitudAutoini] ([terminal], [estado], [informante], [prioridad_informante]) VALUES ({terminal}, 'Solicitado', 'repros', {prioridad})",
+            "nonquery_u": "UPDATE [automatizacion].[sis].[solicitudAutoini] SET [cant_solicitudes] += 1 ,[fecha_ultima_actualizacion] = getdate() WHERE [terminal] = {terminal} AND [informante] = 'repros';"
+            }
+        },
+        "repros_prioridad": {
+            "QR": 1,
+            "C6": 1,
+            "NA": 1,
+            "Z1": 1,
+            "QL": 1,
+            "UY": 1,
+            "XP": 1,
+            "AR": 1,
+            "QA": 1,
+            "A3": 1,
+            "EC": 2,
+            "AP": 2,
+            "AM": 2,
+            "CA": 2,
+            "QD": 2,
+            "DI": 2,
+            "VI": 2,
+            "PN": 2,
+            "DW": 2,
+            "GI": 2
+        },
+	"max_multithread": 10,
+        "autor": {
+            "nombre": "Norman Ruiz",
+            "correo": "norman.ruiz@outlook.com.ar"
+        }
+}

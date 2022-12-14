@@ -51,7 +51,6 @@ module Logger
 		file_log = File.new(File.join(carpeta_log, archivo_log), 'w')
 		file_log.write(" " + "=" * 128 + "\n")
 		file_log.write("  #{DateTime.now} - Archivo de log generado\n")
-		#file_log.write(" " + "~" * 128 + "\n")
 		file_log.close()
 	end
 end
