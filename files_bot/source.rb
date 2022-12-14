@@ -17,7 +17,7 @@ module Source
 			puts(mensaje)
 			escribir_log(mensaje, false)
 			mensaje = "Recolectando terminales candidatas..."
-			puts("  " +mensaje)
+			puts("  " + mensaje)
 			escribir_log(mensaje)
 			origen_datos = conectar(parametros, destino)
 			unless origen_datos.nil?
@@ -29,7 +29,7 @@ module Source
 					if terminales_candidatas.key?(key) then
 						terminales_candidatas[key].push(value)
 					else
-						terminales_candidatas[key] = Array.new 
+						terminales_candidatas[key] = Array.new
 						terminales_candidatas[key].push(value)
 					end
 				end

@@ -19,10 +19,9 @@ module Filter
 			mensaje = "Generando nuevo lote de terminales..."
 			puts("  " + mensaje)
 			escribir_log(mensaje)
-
 			terminales_candidatas.each_pair do |terminal, repros|
 				if terminales_miembro.key?(terminal) then
-					if terminales_miembro[terminales_candidatas][0] == 'U' then
+					if terminales_miembro[terminal][0] == 'u' then
 						nuevo_lote[terminal] = ["u", resolicitar(terminal, terminales_miembro)]
 						contador_u += 1
 					else
@@ -64,7 +63,7 @@ module Filter
 
 		rescue Exception => excepcion
 			estado = false
-			mensaje = "ERROR - Procesando terminales candidatas - #{excepcion.message}}"
+			mensaje = "ERROR - Generando nuevo lote - #{excepcion.message}}"
 			puts("  " + mensaje)
 			escribir_log(mensaje)
 		ensure

@@ -11,21 +11,26 @@ module Target
 		consulta = "#{parametros['data_conection'][destino]['query']}"
 		origen_datos = nil
 		terminales_miembro = Hash.new
+		estados = ['Solicitado', 'Fallido']
 
 		begin
 			mensaje = " #{'-' * 128}"
 			puts(mensaje)
 			escribir_log(mensaje, false)
 			mensaje = "Recolectando terminales miembro..."
-			puts("  " +mensaje)
+			puts("  " + mensaje)
 			escribir_log(mensaje)
 			origen_datos = conectar(parametros, destino)
-			
 			unless origen_datos.nil?
 				resultado = ejecutar_consulta(origen_datos, consulta)
 				resultado.each do |registro|
-					key, solicitudes, estado = registro.values
-					terminales_miembro[key] = [solicitudes, estado]	
+					t, s, e = registro.values
+					if estados.include?(e) then
+						a = 'u'
+					else
+						a = 'i'
+					end
+					terminales_miembro[t] = [a, s]
 				end
 				mensaje = "Terminales miembro detectadas: #{terminales_miembro.keys.length}"
 				puts("  " + mensaje)

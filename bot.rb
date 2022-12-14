@@ -2,8 +2,9 @@
 require './files_bot/logger.rb'
 require './files_bot/config.rb'
 require './files_bot/source.rb'
-require './files_bot/filter.rb'
 require './files_bot/target.rb'
+require './files_bot/filter.rb'
+require './files_bot/action.rb'
 
 class Bot
 	include Logger
@@ -11,6 +12,7 @@ class Bot
 	include Source
 	include Target
 	include Filter
+	include Action
 
 	attr_accessor :estado, :parametros, :terminales_candidatas, :terminales_miembro, :nuevo_lote
 
@@ -35,11 +37,11 @@ class Bot
 			escribir_log(mensaje, false)
 
 			if @estado
-				aux_conf = cargar_configuracion
+				aux_conf = cargar_configuracion()
 				unless aux_conf then
 					@estado = false
 				else
-					@parametros = aux_conf.clone
+					@parametros = aux_conf.clone()
 					@estado = @parametros['status']
 					unless @estado then
 						mensaje = " #{'-' * 128}"
@@ -77,6 +79,15 @@ class Bot
 				unless @nuevo_lote then
 					@estado = false
 					mensaje = "ALERTA - Ejecucion principal - No se pudo completar la generacion del nuevo lote de terminales..."
+					puts("  " + mensaje)
+					escribir_log(mensaje)
+				end
+			end
+
+			if @estado
+				@estado = anexar_lote(@parametros, @nuevo_lote)
+				unless @estado then
+					mensaje = "ALERTA - Ejecucion principal - No se pudo completar la persistencia de datos..."
 					puts("  " + mensaje)
 					escribir_log(mensaje)
 				end
